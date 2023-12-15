@@ -8,7 +8,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="apple"
+ZSH_THEME="murilasso"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -70,7 +70,21 @@ ZSH_THEME="apple"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git golang python laravel brew aws minikube kubectl vagrant zsh-autosuggestions)
+plugins=(
+    git
+    golang
+    python
+    laravel
+    brew
+    aws
+    minikube
+    kubectl
+    vagrant
+    zsh-autosuggestions
+    docker
+    docker-compose
+    gh
+)
 
 ZSH_DISABLE_COMPFIX="true"
 
@@ -108,8 +122,8 @@ alias ssh_amata_stg="ssh -p 52022 balconia@amata.stg"
 alias ssh_amata_prd="ssh -p 53022 balconia@3.114.223.202"
 alias thdoccomp="touch docker-compose.yml"
 alias thdocfile="touch Dockerfile"
-alias sqexoauth='oathtool --totp -b WFYVBDYGIEONNK7K | pbcopy'
-alias sqexenqoauth='oathtool --totp -b R534DWEZSB6JMFXDODVGM3KV2Y | pbcopy'
+alias sqexoauth='oathtool --totp -b WFYVBDYGIEONNK7K'
+alias sqexenqoauth='oathtool --totp -b R534DWEZSB6JMFXDODVGM3KV2Y'
 
 # if cd, exec ls
 cd ()
@@ -135,3 +149,25 @@ if type brew &>/dev/null; then
   autoload -Uz compinit
   compinit
 fi
+
+# vagrant on wsl
+export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS="1"
+export PATH="$PATH:/mnt/c/Program Files/Oracle/VirtualBox"
+
+# no beep
+setopt no_beep
+
+# gpg settings
+GPG_TTY=$(tty)
+export GPG_TTY
+
+# docker auto start
+# if [ $(service docker status | awk '{print $4}') = "not" ]; then
+#   sudo service docker start > /dev/null
+# fi
+# gopath setting
+export PATH=$PATH:/usr/local/go/bin
+# pandoc setting
+export PATH=$PATH:${HOME}/.cabal/bin
+
+[ -f ~/.inshellisense/key-bindings.zsh ] && source ~/.inshellisense/key-bindings.zsh
