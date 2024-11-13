@@ -1,14 +1,14 @@
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+# export PATH=$HOME/bin:/usr/local/bin:/usr/local/Cellar:/usr/local/go/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
+export ZSH="/Users/Hiroki/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="murilasso"
+ZSH_THEME="agnoster"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -23,13 +23,14 @@ ZSH_THEME="murilasso"
 # Case-sensitive completion must be off. _ and - will be interchangeable.
 # HYPHEN_INSENSITIVE="true"
 
-# Uncomment one of the following lines to change the auto-update behavior
-# zstyle ':omz:update' mode disabled  # disable automatic updates
-# zstyle ':omz:update' mode auto      # update automatically without asking
-# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
+# Uncomment the following line to disable bi-weekly auto-update checks.
+# DISABLE_AUTO_UPDATE="true"
+
+# Uncomment the following line to automatically update without prompting.
+# DISABLE_UPDATE_PROMPT="true"
 
 # Uncomment the following line to change how often to auto-update (in days).
-# zstyle ':omz:update' frequency 13
+# export UPDATE_ZSH_DAYS=13
 
 # Uncomment the following line if pasting URLs and other text is messed up.
 # DISABLE_MAGIC_FUNCTIONS="true"
@@ -44,9 +45,8 @@ ZSH_THEME="murilasso"
 # ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
-# You can also set it to another string to have that shown instead of the default red dots.
-# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
-# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
+# Caution: this setting can cause issues with multiline prompts (zsh 5.7.1 and newer seem to work)
+# See https://github.com/ohmyzsh/ohmyzsh/issues/5765
 # COMPLETION_WAITING_DOTS="true"
 
 # Uncomment the following line if you want to disable marking untracked files
@@ -60,7 +60,7 @@ ZSH_THEME="murilasso"
 # "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
 # or set a custom format using the strftime function format specifications,
 # see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
+HIST_STAMPS="mm/dd/yyyy"
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
@@ -70,21 +70,8 @@ ZSH_THEME="murilasso"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(
-    git
-    golang
-    python
-    laravel
-    brew
-    aws
-    minikube
-    kubectl
-    vagrant
-    zsh-autosuggestions
-    docker
-    docker-compose
-    gh
-)
+plugins=(git python golang brew laravel aws docker zsh-autosuggestions kubectl
+         gcloud docker-compose azure)
 
 ZSH_DISABLE_COMPFIX="true"
 
@@ -115,34 +102,18 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias vz="vi ~/.zshrc"
-alias soz="source ~/.zshrc"
-alias ssh_amata_dev="ssh -p 51022 balconia@amata.dev"
-alias ssh_amata_stg="ssh -p 52022 balconia@amata.stg"
-alias ssh_amata_prd="ssh -p 53022 balconia@3.114.223.202"
-alias thdoccomp="touch docker-compose.yml"
-alias thdocfile="touch Dockerfile"
-alias sqexoauth='oathtool --totp -b WFYVBDYGIEONNK7K'
-alias sqexenqoauth='oathtool --totp -b R534DWEZSB6JMFXDODVGM3KV2Y'
 
-# if cd, exec ls
-cd ()
-{
-    builtin cd "$@" && ls -alth
-}
+# alias
+alias so='source'
+alias v='vim'
+alias vi='vim'
+alias vz='vim ~/.zshrc'
+alias soz='source ~/.zshrc'
+# 色を使用
+autoload -Uz colors
+colors
 
-# aws configure
-alias vawsc="vi ~/.aws/credentials"
-export PATH="/opt/homebrew/opt/python@3.10/bin:$PATH"
-
-# >>>> Vagrant command completion (start)
-fpath=(/opt/vagrant/embedded/gems/2.3.4/gems/vagrant-2.3.4/contrib/zsh $fpath)
-compinit
-# <<<<  Vagrant command completion (end)
-
-autoload -Uz compinit; compinit
-
-# zsh completions
+# 補完
 if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
 
@@ -150,24 +121,36 @@ if type brew &>/dev/null; then
   compinit
 fi
 
-# vagrant on wsl
-export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS="1"
-export PATH="$PATH:/mnt/c/Program Files/Oracle/VirtualBox"
+# cdの後にlsを実行
+chpwd() { ls -ltrh }
+alias k=kubectl
+complete -F __start_kubectl k
+eval "$(gh completion -s zsh)"
 
-# no beep
-setopt no_beep
+# Python path
+export PYTHONPATH="/Users/Hiroki/Applications/PythonProjects/post_weather"
 
-# gpg settings
-GPG_TTY=$(tty)
-export GPG_TTY
+# GitLab
+export GITLAB_HOME=$HOME/gitlab
 
-# docker auto start
-# if [ $(service docker status | awk '{print $4}') = "not" ]; then
-#   sudo service docker start > /dev/null
-# fi
-# gopath setting
-export PATH=$PATH:/usr/local/go/bin
-# pandoc setting
-export PATH=$PATH:${HOME}/.cabal/bin
+# sondfile
+export DYLD_LIBRARY_PATH="/opt/homebrew/lib:$DYLD_LIBRARY_PATH"
+autoload -U compinit; compinit
 
-[ -f ~/.inshellisense/key-bindings.zsh ] && source ~/.inshellisense/key-bindings.zsh
+# golang wasm
+export PATH="${PATH}:$(go env GOROOT)/misc/wasm"
+
+# gopath bin
+export PATH="${PATH}:$(go env GOPATH)/bin"
+
+# jargon
+# eval "$(jargon init)"
+
+# eks completion
+fpath=($fpath ~/.zsh/completion)
+autoload -U compinit
+compinit
+export PATH="/opt/homebrew/opt/node@20/bin:$PATH"
+
+
+[[ -f ~/.inshellisense/zsh/init.zsh ]] && source ~/.inshellisense/zsh/init.zsh
